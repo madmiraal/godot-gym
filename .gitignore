@@ -1,0 +1,7 @@
+.import/
+.mono/
+.vs/
+[Bb]uilds/
+
+export_presets.cfg
+

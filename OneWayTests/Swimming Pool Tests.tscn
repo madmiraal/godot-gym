@@ -1,0 +1,116 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://OneWayTests/Swimming Pool Tests.gd" type="Script" id=1]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 512, 150 )
+
+[node name="Swimming Pool Tests" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Water" type="Area2D" parent="."]
+position = Vector2( 512, 450 )
+space_override = 3
+gravity_vec = Vector2( 0, -1 )
+gravity = 196.0
+monitoring = false
+monitorable = false
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Water"]
+shape = SubResource( 1 )
+
+[node name="Polygon2D" type="Polygon2D" parent="Water"]
+color = Color( 0.223529, 0.345098, 0.47451, 0.498039 )
+polygon = PoolVector2Array( -512, -150, 512, -150, 512, 150, -512, 150 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 7.0
+autostart = true
+
+[node name="Test" type="Label" parent="."]
+margin_left = 412.0
+margin_top = 15.0
+margin_right = 612.0
+margin_bottom = 30.0
+text = "Test 1"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Complete" type="Label" parent="."]
+visible = false
+margin_left = 412.0
+margin_top = 30.0
+margin_right = 612.0
+margin_bottom = 60.0
+text = "All tests complete
+Press Space/Enter to repeat"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 350.0
+margin_bottom = 30.0
+text = "Player:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player Linear" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 30.0
+margin_right = 350.0
+margin_bottom = 45.0
+text = "Linear velocity: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player Angular" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 45.0
+margin_right = 350.0
+margin_bottom = 60.0
+text = "Angular velocity: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Platform" type="Label" parent="."]
+margin_left = 674.0
+margin_top = 15.0
+margin_right = 1009.0
+margin_bottom = 30.0
+text = "Platform:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Platform Linear" type="Label" parent="."]
+margin_left = 674.0
+margin_top = 30.0
+margin_right = 1009.0
+margin_bottom = 45.0
+text = "Linear velocity: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Platform Angular" type="Label" parent="."]
+margin_left = 674.0
+margin_top = 45.0
+margin_right = 1009.0
+margin_bottom = 60.0
+text = "Angular velocity: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
