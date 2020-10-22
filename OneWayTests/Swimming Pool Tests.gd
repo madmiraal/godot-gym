@@ -19,6 +19,7 @@ var platform_angular = 0
 func _input(event):
 	if event.is_action_pressed("ui_accept") and $Complete.visible:
 		$Complete.visible = false
+		$Timer.start()
 		prepare_next_test()
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().change_scene("res://Menu.tscn")
@@ -75,6 +76,7 @@ func end_test():
 
 func complete():
 	$Complete.visible = true
+	$Timer.stop()
 	
 func _on_Timer_timeout():
 	end_test()
