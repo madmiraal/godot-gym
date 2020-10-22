@@ -1,6 +1,7 @@
 extends Node2D
 
 export (bool) var stop_on_failure
+export (bool) var print_failure = false
 export (bool) var loop = false
 
 onready var rigid_player_scene = preload("res://2DAssets/RigidBody Player.tscn")
@@ -17,10 +18,13 @@ var player_size = Vector2(32, 32)
 var distance = 100
 var speed = 500
 var corner_code
+var corner_name = ""
 var corner_position
 var direction_code
+var direction_name = ""
 var direction
 var offset_code
+var offset_name = ""
 var offset
 var passed = 0
 var failed = 0
@@ -42,6 +46,10 @@ func _input(event):
 		get_tree().change_scene("res://Menu.tscn")
 
 func _ready():
+	if print_failure:
+		print("Corner Grip Test Results")
+		print("========================")
+		printt("Test", "Failure", "Body", "Direction", "Offset", "Corner")
 	prepare_next_test()
 
 func restart():
@@ -53,18 +61,36 @@ func restart():
 	$Timer.start()
 	prepare_next_test()
 
+func print_details(collided):
+	var failure = "Collided" if collided else "Passed"
+	printt(test_id, failure, player.get_class(), direction_name, offset_name, corner_name)
+
 func update_test_labels():
 	$"Test".text = "Test " + str(test_id)
 	$"Player".text    = "Player: " + player.get_class()
-	var corner_name = ""
+	corner_name = "Corner: "
 	match corner_code:
 		CORNER_TOP_LEFT:
-			corner_name = "Top left corner"
+			corner_name += "Top-Left"
 		CORNER_TOP_RIGHT:
-			corner_name = "Top right corner"
-	$"Corner".text    = "Corner: " + corner_name
-	$"Direction".text = "Direction: " + str(direction)
-	var offset_name = "None: "
+			corner_name += "Top-Right"
+	$"Corner".text = corner_name
+	direction_name = "Direction: "
+	match direction_code:
+		DIRECTION.UP, DIRECTION.UP_RIGHT, DIRECTION.UP_LEFT:
+			direction_name += "Up"
+		DIRECTION.DOWN, DIRECTION.DOWN_RIGHT, DIRECTION.DOWN_LEFT:
+			direction_name += "Down"
+	match direction_code:
+		DIRECTION.UP_RIGHT, DIRECTION.UP_LEFT, DIRECTION.DOWN_RIGHT, DIRECTION.DOWN_LEFT:
+			direction_name += "-"
+	match direction_code:
+		DIRECTION.DOWN_LEFT, DIRECTION.LEFT, DIRECTION.UP_LEFT:
+			direction_name += "Left"
+		DIRECTION.UP_RIGHT, DIRECTION.RIGHT, DIRECTION.DOWN_RIGHT:
+			direction_name += "Right"
+	$"Direction".text = direction_name
+	offset_name = "None: "
 	match offset_code:
 		OFFSET.SIDE:
 			offset_name = "Side: "
@@ -191,6 +217,9 @@ func tests_complete():
 	complete = true
 	$Timer.stop()
 	$Complete.visible = true
+	if print_failure:
+		print("Tests passed: ", passed)
+		print("Tests failed: ", failed)
 
 func pause(on):
 	paused = on
@@ -214,6 +243,8 @@ func _on_body_collided(body):
 	else:
 		failed += 1
 		test_text += "FAILED!"
+		if print_failure:
+			print_details(true)
 		if stop_on_failure:
 			pause(true)
 	update_test_labels()
@@ -226,6 +257,8 @@ func _on_target_collided():
 		if should_collide:
 			failed += 1
 			test_text += "FAILED!"
+			if print_failure:
+				print_details(false)
 			if stop_on_failure:
 				pause(true)
 		else:
