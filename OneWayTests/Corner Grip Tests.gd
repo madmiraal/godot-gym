@@ -151,17 +151,30 @@ func set_offset():
 func set_should_collide():
 	# Should never collide unless...
 	should_collide = false
-	# ... direction is downward and it's not hitting a side
-	if direction.y > 0 and offset_code != OFFSET.SIDE:
-		should_collide = true
-	# ... or it will hit the top first.
-	match corner_code:
-		CORNER_TOP_LEFT:
-			if direction.y > 0 and direction.x < 0:
+	# ... direction is downward and...
+	if direction.y > 0:
+		match offset_code:
+			# ... it's aimed at the top or ...
+			OFFSET.TOP:
 				should_collide = true
-		CORNER_TOP_RIGHT:
-			if direction.y > 0 and direction.x > 0:
-				should_collide = true
+			# ...it's aimed at the side but will hit the top first ... or
+			OFFSET.SIDE:
+				match corner_code:
+					CORNER_TOP_LEFT:
+						if direction.x < 0:
+							should_collide = true
+					CORNER_TOP_RIGHT:
+						if direction.x > 0:
+							should_collide = true
+			# ...it's aimed diagonally at the corner (debatable)
+			OFFSET.NONE:
+				match corner_code:
+					CORNER_TOP_LEFT:
+						if direction.x > 0:
+							should_collide = true
+					CORNER_TOP_RIGHT:
+						if direction.x < 0:
+							should_collide = true
 
 func start_test():
 	set_corner_position()
