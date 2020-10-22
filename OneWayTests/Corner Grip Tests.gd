@@ -3,6 +3,7 @@ extends Node2D
 export (bool) var stop_on_failure
 export (bool) var print_failure = false
 export (bool) var loop = false
+export (bool) var one_way_platform = true
 
 onready var rigid_player_scene = preload("res://2DAssets/RigidBody Player.tscn")
 onready var kinematic_player_scene = preload("res://2DAssets/KinematicBody Player.tscn")
@@ -51,6 +52,8 @@ func _ready():
 		print("========================")
 		printt("Test", "Failure", "Body", "Direction", "Offset", "Corner")
 	prepare_next_test()
+	if not one_way_platform:
+		$Platform/CollisionShape2D.one_way_collision = false
 
 func restart():
 	complete = false
@@ -149,32 +152,55 @@ func set_offset():
 			offset += Vector2(0, 1)
 
 func set_should_collide():
-	# Should never collide unless...
-	should_collide = false
-	# ... direction is downward and...
-	if direction.y > 0:
-		match offset_code:
-			# ... it's aimed at the top or ...
-			OFFSET.TOP:
-				should_collide = true
-			# ...it's aimed at the side but will hit the top first ... or
-			OFFSET.SIDE:
-				match corner_code:
-					CORNER_TOP_LEFT:
-						if direction.x < 0:
-							should_collide = true
-					CORNER_TOP_RIGHT:
-						if direction.x > 0:
-							should_collide = true
-			# ...it's aimed diagonally at the corner (debatable)
-			OFFSET.NONE:
-				match corner_code:
-					CORNER_TOP_LEFT:
-						if direction.x > 0:
-							should_collide = true
-					CORNER_TOP_RIGHT:
-						if direction.x < 0:
-							should_collide = true
+	if one_way_platform:
+		# Should never collide unless...
+		should_collide = false
+		# ... direction is downward and...
+		if direction.y > 0:
+			match offset_code:
+				# ... it's aimed at the top or ...
+				OFFSET.TOP:
+					should_collide = true
+				# ...it's aimed at the side but will hit the top first ... or
+				OFFSET.SIDE:
+					match corner_code:
+						CORNER_TOP_LEFT:
+							if direction.x < 0:
+								should_collide = true
+						CORNER_TOP_RIGHT:
+							if direction.x > 0:
+								should_collide = true
+				# ...it's aimed diagonally at the corner (debatable)
+				OFFSET.NONE:
+					match corner_code:
+						CORNER_TOP_LEFT:
+							if direction.x > 0:
+								should_collide = true
+						CORNER_TOP_RIGHT:
+							if direction.x < 0:
+								should_collide = true
+	else: # Normal platform
+		# Should always collide unless ...
+		should_collide = true
+		# ... zero pixel overlap
+		match direction_code:
+			DIRECTION.LEFT, DIRECTION.RIGHT:
+				if offset_code != OFFSET.SIDE:
+					should_collide = false
+			DIRECTION.DOWN:
+				if offset_code != OFFSET.TOP:
+					should_collide = false
+		# ... it skims the corner (debatable)
+		if offset_code == OFFSET.NONE:
+			match corner_code:
+				CORNER_TOP_LEFT:
+					match direction_code:
+						DIRECTION.UP_RIGHT, DIRECTION.DOWN_LEFT:
+							should_collide = false
+				CORNER_TOP_RIGHT:
+					match direction_code:
+						DIRECTION.DOWN_RIGHT, DIRECTION.UP_LEFT:
+							should_collide = false
 
 func start_test():
 	set_corner_position()
