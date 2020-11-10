@@ -1,0 +1,165 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+var margin = \"?\" setget set_margin_text
+var total_passed = \"?\" setget set_total_passed
+var total_failed = \"?\" setget set_total_failed
+var passed = \"?\" setget set_passed
+var failed = \"?\" setget set_failed
+var separation = \"?\" setget set_separation
+var motion_distance = \"?\" setget set_motion_distance
+var collision_separation = \"?\" setget set_collision_separation
+var collided = \"?\" setget set_collided
+var result = \"\" setget set_result
+var complete = \"\" setget set_complete
+
+func set_margin_text(value):
+	$\"Margin\".text = \"Margin: \" + str(value)
+
+func set_total_passed(value):
+	$\"Total Passed\".text = \"Total Passed: \" + str(value)
+
+func set_total_failed(value):
+	$\"Total Failed\".text = \"Total Failed: \" + str(value)
+
+func set_passed(value):
+	$\"Passed\".text = \"Passed: \" + str(value)
+
+func set_failed(value):
+	$\"Failed\".text = \"Failed: \" + str(value)
+
+func set_separation(value):
+	$\"Separation\".text = \"Separation: \" + str(value)
+
+func set_motion_distance(value):
+	$\"Motion Distance\".text = \"Motion distance: \" + str(value)
+
+func set_collision_separation(value):
+	$\"Collision Separation\".text = \"Collision separation: \" + str(value)
+
+func set_collided(value):
+	$\"Collided\".text = \"Collided: \" + str(value)
+
+func set_result(value):
+	$\"Result\".text = str(value)
+
+func set_complete(value):
+	$\"Complete\".text = str(value)
+"
+
+[node name="Teleportation Test Data" type="Control"]
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Margin" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 15.0
+margin_right = 590.0
+margin_bottom = 30.0
+text = "Margin: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Total Passed" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 30.0
+margin_right = 590.0
+margin_bottom = 45.0
+text = "Total Passed: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Total Failed" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 45.0
+margin_right = 590.0
+margin_bottom = 59.0
+text = "Total Failed: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Separation" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 60.0
+margin_right = 590.0
+margin_bottom = 75.0
+text = "Separation: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Passed" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 75.0
+margin_right = 590.0
+margin_bottom = 90.0
+text = "Passed: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Failed" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 90.0
+margin_right = 590.0
+margin_bottom = 105.0
+text = "Failed: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Motion Distance" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 105.0
+margin_right = 590.0
+margin_bottom = 120.0
+text = "Motion distance: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Collision Separation" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 120.0
+margin_right = 590.0
+margin_bottom = 135.0
+text = "Collision separation: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Collided" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 135.0
+margin_right = 590.0
+margin_bottom = 150.0
+text = "Collided: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Result" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 150.0
+margin_right = 590.0
+margin_bottom = 165.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Complete" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 165.0
+margin_right = 590.0
+margin_bottom = 180.0
+text = "ALL TESTS COMPLETE"
+__meta__ = {
+"_edit_use_anchors_": false
+}

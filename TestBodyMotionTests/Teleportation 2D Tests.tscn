@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://TestBodyMotionTests/Teleportation Tests.gd" type="Script" id=1]
+[ext_resource path="res://TestBodyMotionTests/Teleportation Test Data.tscn" type="PackedScene" id=2]
+
+[node name="Teleportation Tests" type="Node2D"]
+script = ExtResource( 1 )
+margin = 0.0
+use_rigidbody = true
+
+[node name="Teleportation Test Data" parent="." instance=ExtResource( 2 )]
+
+[node name="Start Timer" type="Timer" parent="."]
+wait_time = 0.01
+one_shot = true
+
+[node name="Finish Timer" type="Timer" parent="."]
+wait_time = 0.01
+one_shot = true
+[connection signal="timeout" from="Start Timer" to="." method="perform_test"]
+[connection signal="timeout" from="Finish Timer" to="." method="end_test"]
