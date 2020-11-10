@@ -4,6 +4,7 @@ export (bool) var stop_on_failure
 export (bool) var print_failure = false
 export (bool) var loop = false
 export (bool) var one_way_platform = true
+export (float) var offset_size = 1
 
 onready var rigid_player_scene = preload("res://2DAssets/RigidBody Player.tscn")
 onready var kinematic_player_scene = preload("res://2DAssets/KinematicBody Player.tscn")
@@ -145,11 +146,11 @@ func set_offset():
 		OFFSET.TOP:
 			match corner_code:
 				CORNER_TOP_LEFT:
-					offset += Vector2(1, 0)
+					offset += Vector2(offset_size, 0)
 				CORNER_TOP_RIGHT:
-					offset += Vector2(-1, 0)
+					offset += Vector2(-offset_size, 0)
 		OFFSET.SIDE:
-			offset += Vector2(0, 1)
+			offset += Vector2(0, offset_size)
 
 func set_should_collide():
 	if one_way_platform:
