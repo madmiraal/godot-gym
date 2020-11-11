@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=2]
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Spatial
+
+var text setget set_text, get_text
+var size setget set_size, get_size
+
+func set_text(new_text):
+	$Viewport/Label.text = new_text
+
+func get_text():
+	return $Viewport/Label.text
+
+func set_size(new_size):
+	$MeshInstance.size = new_size
+
+func get_size():
+	return $MeshInstance.size
+"
+
+[sub_resource type="QuadMesh" id=1]
+size = Vector2( 3, 0.25 )
+
+[sub_resource type="ViewportTexture" id=2]
+viewport_path = NodePath("Viewport")
+
+[sub_resource type="SpatialMaterial" id=3]
+resource_local_to_scene = true
+flags_transparent = true
+flags_unshaded = true
+flags_albedo_tex_force_srgb = true
+albedo_texture = SubResource( 2 )
+
+[node name="Label3D" type="Spatial"]
+script = SubResource( 4 )
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 200, 15 )
+transparent_bg = true
+msaa = 2
+keep_3d_linear = true
+render_target_v_flip = true
+
+[node name="Label" type="Label" parent="Viewport"]
+margin_right = 200.0
+margin_bottom = 15.0
+align = 1
+valign = 1
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+mesh = SubResource( 1 )
+material/0 = SubResource( 3 )
