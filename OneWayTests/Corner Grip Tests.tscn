@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://2DAssets/StaticBody Platform.tscn" type="PackedScene" id=1]
+[ext_resource path="res://2D Assets/One-Way Blocks/StaticBody Platform.tscn" type="PackedScene" id=1]
 [ext_resource path="res://OneWayTests/Corner Grip Tests.gd" type="Script" id=2]
 
 [node name="Corner Grip Tests" type="Node2D"]

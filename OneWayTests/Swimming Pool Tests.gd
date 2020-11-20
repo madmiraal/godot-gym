@@ -2,8 +2,8 @@ extends Node2D
 
 export (bool) var loop = false
 
-onready var player_scene = preload("res://2DAssets/RigidBody Player.tscn")
-onready var platform_scene = preload("res://2DAssets/RigidBody Platform.tscn")
+onready var player_scene = preload("res://2D Assets/RigidBody Player.tscn")
+onready var platform_scene = preload("res://2D Assets/One-Way Blocks/RigidBody Thin Platform.tscn")
 
 var player
 var platform

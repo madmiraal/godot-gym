@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Spatial
 
 var text setget set_text, get_text
@@ -19,21 +19,21 @@ func get_size():
 	return $MeshInstance.size
 "
 
-[sub_resource type="QuadMesh" id=1]
+[sub_resource type="QuadMesh" id=2]
 size = Vector2( 3, 0.25 )
 
-[sub_resource type="ViewportTexture" id=2]
+[sub_resource type="ViewportTexture" id=3]
 viewport_path = NodePath("Viewport")
 
-[sub_resource type="SpatialMaterial" id=3]
+[sub_resource type="SpatialMaterial" id=4]
 resource_local_to_scene = true
 flags_transparent = true
 flags_unshaded = true
 flags_albedo_tex_force_srgb = true
-albedo_texture = SubResource( 2 )
+albedo_texture = SubResource( 3 )
 
 [node name="Label3D" type="Spatial"]
-script = SubResource( 4 )
+script = SubResource( 1 )
 
 [node name="Viewport" type="Viewport" parent="."]
 size = Vector2( 200, 15 )
@@ -49,5 +49,5 @@ align = 1
 valign = 1
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-mesh = SubResource( 1 )
-material/0 = SubResource( 3 )
+mesh = SubResource( 2 )
+material/0 = SubResource( 4 )

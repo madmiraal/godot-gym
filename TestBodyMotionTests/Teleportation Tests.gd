@@ -39,8 +39,8 @@ func _input(event):
 func _ready():
 	var node = self
 	if node is Spatial:
-		rigid_player_scene = preload("res://3DAssets/RigidBody Player.tscn")
-		kinematic_player_scene = preload("res://3DAssets/KinematicBody Player.tscn")
+		rigid_player_scene = preload("res://3D Assets/RigidBody Player.tscn")
+		kinematic_player_scene = preload("res://3D Assets/KinematicBody Player.tscn")
 		starting_position2 = Vector3(0, 0, 0)
 		motion = Vector3()
 		step_size = 0.1
@@ -49,8 +49,8 @@ func _ready():
 		if margin == 0.08:
 			margin *= 0.001 / 0.08
 	else:
-		rigid_player_scene = preload("res://2DAssets/RigidBody Player.tscn")
-		kinematic_player_scene = preload("res://2DAssets/KinematicBody Player.tscn")
+		rigid_player_scene = preload("res://2D Assets/RigidBody Player.tscn")
+		kinematic_player_scene = preload("res://2D Assets/KinematicBody Player.tscn")
 		starting_position2 = Vector2(500, 300)
 		motion = Vector2()
 		step_size = 1

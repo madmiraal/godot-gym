@@ -6,9 +6,9 @@ export (bool) var loop = false
 export (bool) var one_way_platform = true
 export (float) var offset_size = 1
 
-onready var rigid_player_scene = preload("res://2DAssets/RigidBody Player.tscn")
-onready var kinematic_player_scene = preload("res://2DAssets/KinematicBody Player.tscn")
-onready var target_scene = preload("res://2DAssets/Target.tscn")
+onready var rigid_player_scene = preload("res://2D Assets/RigidBody Player.tscn")
+onready var kinematic_player_scene = preload("res://2D Assets/KinematicBody Player.tscn")
+onready var target_scene = preload("res://2D Assets/Target.tscn")
 
 enum OFFSET { NONE, TOP, SIDE }
 enum DIRECTION { UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT }
