@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://2D Assets/One-Way Blocks/StaticBody Platform.tscn" type="PackedScene" id=1]
+[ext_resource path="res://TestBodyMotionTests/Corner Grip Tests.gd" type="Script" id=2]
+[ext_resource path="res://TestBodyMotionTests/Corner Grip Test Data.tscn" type="PackedScene" id=3]
+
+[node name="One-Way Corner Grip Tests" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Corner Grip Test Data" parent="." instance=ExtResource( 3 )]
+
+[node name="Platform" parent="." instance=ExtResource( 1 )]
+position = Vector2( 500, 300 )
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

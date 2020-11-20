@@ -45,7 +45,7 @@ margin_right = 237.0
 margin_bottom = 182.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "Corner Grip Tests"
+text = "One-Way Corner Grip Tests"
 
 [node name="Test4" type="Button" parent="VBoxContainer"]
 margin_left = 287.0
@@ -54,11 +54,20 @@ margin_right = 524.0
 margin_bottom = 182.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "2D Teleportation Tests"
+text = "Corner Grip Tests"
 
 [node name="Test5" type="Button" parent="VBoxContainer"]
 margin_top = 232.0
 margin_right = 237.0
+margin_bottom = 298.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "2D Teleportation Tests"
+
+[node name="Test6" type="Button" parent="VBoxContainer"]
+margin_left = 287.0
+margin_top = 232.0
+margin_right = 524.0
 margin_bottom = 298.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -68,3 +77,4 @@ text = "3D Teleportation Tests"
 [connection signal="pressed" from="VBoxContainer/Test3" to="." method="_on_Test3_pressed"]
 [connection signal="pressed" from="VBoxContainer/Test4" to="." method="_on_Test4_pressed"]
 [connection signal="pressed" from="VBoxContainer/Test5" to="." method="_on_Test5_pressed"]
+[connection signal="pressed" from="VBoxContainer/Test6" to="." method="_on_Test6_pressed"]

@@ -1,0 +1,222 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+enum OFFSET { NONE, TOP, SIDE }
+enum DIRECTION { UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT }
+
+var passed = 0
+var failed = 0
+
+var print_failure = false
+var test_id = 0
+var player_class = \"\"
+var corner_code
+var direction_code
+var offset_code
+var offset = Vector2()
+var corner_name = \"\"
+var direction_name = \"\"
+var offset_name = \"\"
+
+func _ready():
+	restart()
+
+func restart():
+	passed = 0
+	failed = 0
+	$Complete.visible = false
+	if print_failure:
+		print(\"Corner Grip Test Results\")
+		print(\"========================\")
+		printt(\"Test\", \"Failure\", \"Body\", \"Direction\", \"Offset\", \"Corner\")
+
+func pause(on):
+	$Paused.visible = on
+
+func test_result(success, collision):
+	var this_test_text = \"This Test: \"
+	if success:
+		passed += 1
+		this_test_text += \"Passed!\"
+	else:
+		failed += 1
+		this_test_text += \"FAILED!\"
+	$\"This Test\".text = this_test_text
+	var collided_text = \"Collided: \"
+	if collision:
+		collided_text += \"True\"
+	else:
+		collided_text += \"False\"
+	$\"Collided\".text = collided_text
+	$\"Tests Passed\".text = \"Tests passed: \" + str(passed)
+	$\"Tests Failed\".text = \"Tests failed: \" + str(failed)
+	if not success and print_failure:
+		var failure = \"Collided\" if collision else \"Passed\"
+		printt(test_id, failure, player_class, direction_name, offset_name, corner_name)
+
+func tests_complete():
+	$Complete.visible = true
+	if print_failure:
+		print(\"Tests passed: \", passed)
+		print(\"Tests failed: \", failed)
+
+func update_labels():
+	$\"Test\".text = \"Test \" + str(test_id)
+	$\"Player\".text = \"Player: \" + player_class
+	corner_name = \"Corner: \"
+	match corner_code:
+		CORNER_TOP_LEFT:
+			corner_name += \"Top-Left\"
+		CORNER_TOP_RIGHT:
+			corner_name += \"Top-Right\"
+	$\"Corner\".text = corner_name
+	direction_name = \"Direction: \"
+	match direction_code:
+		DIRECTION.UP, DIRECTION.UP_RIGHT, DIRECTION.UP_LEFT:
+			direction_name += \"Up\"
+		DIRECTION.DOWN, DIRECTION.DOWN_RIGHT, DIRECTION.DOWN_LEFT:
+			direction_name += \"Down\"
+	match direction_code:
+		DIRECTION.UP_RIGHT, DIRECTION.UP_LEFT, DIRECTION.DOWN_RIGHT, DIRECTION.DOWN_LEFT:
+			direction_name += \"-\"
+	match direction_code:
+		DIRECTION.DOWN_LEFT, DIRECTION.LEFT, DIRECTION.UP_LEFT:
+			direction_name += \"Left\"
+		DIRECTION.UP_RIGHT, DIRECTION.RIGHT, DIRECTION.DOWN_RIGHT:
+			direction_name += \"Right\"
+	$\"Direction\".text = direction_name
+	offset_name = \"None: \"
+	match offset_code:
+		OFFSET.SIDE:
+			offset_name = \"Side: \"
+		OFFSET.TOP:
+			offset_name = \"Top: \"
+	offset_name += str(offset)
+	$\"Offset\".text = \"Offset: \" + offset_name
+	$\"Tests Passed\".text = \"Tests passed: \" + str(passed)
+	$\"Tests Failed\".text = \"Tests failed: \" + str(failed)
+	$\"Collided\".text = \"Collided: ?\"
+	$\"This Test\".text = \"This Test: ?\"
+"
+
+[node name="Corner Grip Test Data" type="Control"]
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Test" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 200.0
+margin_bottom = 30.0
+text = "Test: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 30.0
+margin_right = 200.0
+margin_bottom = 45.0
+text = "Player: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Corner" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 45.0
+margin_right = 200.0
+margin_bottom = 60.0
+text = "Corner: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Direction" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 60.0
+margin_right = 200.0
+margin_bottom = 75.0
+text = "Direction: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Offset" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 75.0
+margin_right = 200.0
+margin_bottom = 90.0
+text = "Offset: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tests Passed" type="Label" parent="."]
+margin_left = 400.0
+margin_top = 15.0
+margin_right = 600.0
+margin_bottom = 30.0
+text = "Tests passed: 0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tests Failed" type="Label" parent="."]
+margin_left = 400.0
+margin_top = 30.0
+margin_right = 600.0
+margin_bottom = 45.0
+text = "Tests failed: 0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Collided" type="Label" parent="."]
+margin_left = 400.0
+margin_top = 45.0
+margin_right = 600.0
+margin_bottom = 60.0
+text = "Collided: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="This Test" type="Label" parent="."]
+margin_left = 400.0
+margin_top = 60.0
+margin_right = 600.0
+margin_bottom = 75.0
+text = "This Test: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Paused" type="Label" parent="."]
+visible = false
+margin_left = 400.0
+margin_top = 75.0
+margin_right = 600.0
+margin_bottom = 90.0
+text = "Paused
+Press Space/Enter to continue"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Complete" type="Label" parent="."]
+visible = false
+margin_left = 400.0
+margin_top = 75.0
+margin_right = 600.0
+margin_bottom = 90.0
+text = "All tests complete
+Press Space/Enter to repeat"
+__meta__ = {
+"_edit_use_anchors_": false
+}

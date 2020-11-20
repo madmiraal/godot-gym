@@ -3,7 +3,6 @@ extends Node2D
 export (bool) var stop_on_failure
 export (bool) var print_failure = false
 export (bool) var loop = false
-export (bool) var one_way_platform = true
 export (float) var offset_size = 1
 
 onready var rigid_player_scene = preload("res://2D Assets/RigidBody Player.tscn")
@@ -20,23 +19,20 @@ var player_size = Vector2(32, 32)
 var distance = 100
 var speed = 500
 var corner_code
-var corner_name = ""
 var corner_position
 var direction_code
-var direction_name = ""
 var direction
 var offset_code
-var offset_name = ""
 var offset
-var passed = 0
-var failed = 0
 var should_collide
 var collided = false
 var paused = false
 var complete = false
-onready var platform_postion = $Platform.position
+
+onready var platform_position = $Platform.position
 onready var platform_width = $Platform/CollisionShape2D.shape.extents.x
 onready var platform_height = $Platform/CollisionShape2D.shape.extents.y
+onready var one_way_platform = $Platform/CollisionShape2D.one_way_collision
 
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
@@ -48,71 +44,38 @@ func _input(event):
 		get_tree().change_scene("res://Menu.tscn")
 
 func _ready():
-	if print_failure:
-		print("Corner Grip Test Results")
-		print("========================")
-		printt("Test", "Failure", "Body", "Direction", "Offset", "Corner")
-	prepare_next_test()
-	if not one_way_platform:
-		$Platform/CollisionShape2D.one_way_collision = false
+	if $"Corner Grip Test Data":
+		$"Corner Grip Test Data".print_failure = print_failure
+	restart()
 
 func restart():
 	complete = false
 	test_id = 0
-	passed = 0
-	failed = 0
-	$Complete.visible = false
+	if $"Corner Grip Test Data":
+		$"Corner Grip Test Data".restart()
 	$Timer.start()
 	prepare_next_test()
 
-func print_details(collided):
-	var failure = "Collided" if collided else "Passed"
-	printt(test_id, failure, player.get_class(), direction_name, offset_name, corner_name)
+func update_test_result(success, collision):
+	if $"Corner Grip Test Data":
+		$"Corner Grip Test Data".test_result(success, collision)
 
-func update_test_labels():
-	$"Test".text = "Test " + str(test_id)
-	$"Player".text    = "Player: " + player.get_class()
-	corner_name = "Corner: "
-	match corner_code:
-		CORNER_TOP_LEFT:
-			corner_name += "Top-Left"
-		CORNER_TOP_RIGHT:
-			corner_name += "Top-Right"
-	$"Corner".text = corner_name
-	direction_name = "Direction: "
-	match direction_code:
-		DIRECTION.UP, DIRECTION.UP_RIGHT, DIRECTION.UP_LEFT:
-			direction_name += "Up"
-		DIRECTION.DOWN, DIRECTION.DOWN_RIGHT, DIRECTION.DOWN_LEFT:
-			direction_name += "Down"
-	match direction_code:
-		DIRECTION.UP_RIGHT, DIRECTION.UP_LEFT, DIRECTION.DOWN_RIGHT, DIRECTION.DOWN_LEFT:
-			direction_name += "-"
-	match direction_code:
-		DIRECTION.DOWN_LEFT, DIRECTION.LEFT, DIRECTION.UP_LEFT:
-			direction_name += "Left"
-		DIRECTION.UP_RIGHT, DIRECTION.RIGHT, DIRECTION.DOWN_RIGHT:
-			direction_name += "Right"
-	$"Direction".text = direction_name
-	offset_name = "None: "
-	match offset_code:
-		OFFSET.SIDE:
-			offset_name = "Side: "
-		OFFSET.TOP:
-			offset_name = "Top: "
-	match corner_code:
-		CORNER_TOP_LEFT:
-			offset_name += str(offset - Vector2(-player_size.x, -player_size.y))
-		CORNER_TOP_RIGHT:
-			offset_name += str(offset - Vector2(player_size.x, -player_size.y))
-	$"Offset".text    = "Offset: " + offset_name
-	$"Tests Passed".text = "Tests passed: " + str(passed)
-	$"Tests Failed".text = "Tests failed: " + str(failed)
-	$"Collided".text = "Collided: ?"
-	$"This Test".text = "This Test: ?"
+func update_test_data():
+	if $"Corner Grip Test Data":
+		$"Corner Grip Test Data".test_id = test_id
+		$"Corner Grip Test Data".player_class = player.get_class()
+		$"Corner Grip Test Data".corner_code = corner_code
+		$"Corner Grip Test Data".direction_code = direction_code
+		$"Corner Grip Test Data".offset_code = offset_code
+		match corner_code:
+			CORNER_TOP_LEFT:
+				$"Corner Grip Test Data".offset = offset - Vector2(-player_size.x, -player_size.y)
+			CORNER_TOP_RIGHT:
+				$"Corner Grip Test Data".offset = offset - Vector2(player_size.x, -player_size.y)
+		$"Corner Grip Test Data".update_labels()
 
 func set_corner_position():
-	corner_position = platform_postion
+	corner_position = platform_position
 	match corner_code:
 		CORNER_TOP_LEFT:
 			corner_position.x -= platform_width
@@ -224,7 +187,7 @@ func start_test():
 	target.position = player.position + (direction * distance * 4)
 	add_child(player)
 	add_child(target)
-	update_test_labels()
+	update_test_data()
 
 func prepare_next_test():
 	var players = 2
@@ -256,15 +219,14 @@ func prepare_next_test():
 func tests_complete():
 	complete = true
 	$Timer.stop()
-	$Complete.visible = true
-	if print_failure:
-		print("Tests passed: ", passed)
-		print("Tests failed: ", failed)
+	if $"Corner Grip Test Data":
+		$"Corner Grip Test Data".tests_complete()
 
 func pause(on):
 	paused = on
 	$Timer.paused = on
-	$Paused.visible = on
+	if $"Corner Grip Test Data":
+		$"Corner Grip Test Data".pause(on)
 	player.linear_velocity = Vector2()
 	if player is RigidBody2D:
 		player.angular_velocity = 0
@@ -276,37 +238,15 @@ func end_test():
 
 func _on_body_collided(body):
 	collided = true
-	var test_text = "This Test: "
-	if should_collide:
-		passed += 1
-		test_text += "Passed!"
-	else:
-		failed += 1
-		test_text += "FAILED!"
-		if print_failure:
-			print_details(true)
-		if stop_on_failure:
-			pause(true)
-	update_test_labels()
-	$"This Test".text = test_text
-	$"Collided".text = "Collided: True"
+	update_test_result(should_collide, true)
+	if not should_collide and stop_on_failure:
+		pause(true)
 
 func _on_target_collided():
 	if not collided:
-		var test_text = "This Test: "
-		if should_collide:
-			failed += 1
-			test_text += "FAILED!"
-			if print_failure:
-				print_details(false)
-			if stop_on_failure:
-				pause(true)
-		else:
-			passed += 1
-			test_text += "Passed!"
-		update_test_labels()
-		$"This Test".text = test_text
-		$"Collided".text = "Collided: False"
+		update_test_result(!should_collide, false)
+		if should_collide and stop_on_failure:
+			pause(true)
 
 func _on_Timer_timeout():
 	end_test()
