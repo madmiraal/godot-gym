@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://OneWayTests/Around the Clock Tests.gd" type="Script" id=1]
+[ext_resource path="res://OneWayTests/Around the Clock Test Data.tscn" type="PackedScene" id=3]
+
+[node name="Around the Clock Tests" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Around the Clock Test Data" parent="." instance=ExtResource( 3 )]
+
+[node name="Timer" type="Timer" parent="."]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

@@ -1,0 +1,204 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+var passed = 0
+var failed = 0
+
+var print_failure = false
+var test_id = 0
+var player_class = \"\"
+var player_direction = 0
+var short_platform = false
+var platform_rotation = 0
+var player_rotation = 0
+
+func _ready():
+	restart()
+
+func restart():
+	passed = 0
+	failed = 0
+	$Complete.visible = false
+	if print_failure:
+		print(\"Around the Clock Test Results\")
+		print(\"=============================\")
+		printt(\"Test\", \"Failure\", \"Body\", \"Direction\", \"Platform Length\", \"Platform Angle\", \"Player Angle\")
+
+func pause(on):
+	$Paused.visible = on
+
+func test_result(success, collision):
+	var this_test_text = \"This Test: \"
+	if success:
+		passed += 1
+		this_test_text += \"Passed!\"
+	else:
+		failed += 1
+		this_test_text += \"FAILED!\"
+	$\"This Test\".text = this_test_text
+	var collided_text = \"Collided: \"
+	if collision:
+		collided_text += \"True\"
+	else:
+		collided_text += \"False\"
+	$\"Collided\".text = collided_text
+	$\"Tests Passed\".text = \"Tests passed: \" + str(passed)
+	$\"Tests Failed\".text = \"Tests failed: \" + str(failed)
+	if not success and print_failure:
+		var failure = \"Collided\" if collision else \"Passed\"
+		var length = \"Short\" if short_platform else \"Long\"
+		printt(test_id, failure, player_class, player_direction, length, platform_rotation, player_rotation)
+
+func tests_complete():
+	$Complete.visible = true
+	if print_failure:
+		print(\"Tests passed: \", passed)
+		print(\"Tests failed: \", failed)
+
+func update_labels():
+	$\"Test\".text = \"Test \" + str(test_id)
+	$\"Player\".text = \"Player: \" + player_class
+	$\"Player Direction\".text = \"Player Direction: \" + str(player_direction) + \"°\"
+	if short_platform:
+		$\"Platform Length\".text = \"Platform Length: Short\"
+	else:
+		$\"Platform Length\".text = \"Platform Length: Long\"
+	$\"Platform Rotation\".text = \"Platform Rotation: \" + str(platform_rotation) + \"°\"
+	$\"Player Rotation\".text = \"Player Rotation: \" + str(player_rotation) + \"°\"
+	$\"Tests Passed\".text = \"Tests passed: \" + str(passed)
+	$\"Tests Failed\".text = \"Tests failed: \" + str(failed)
+	$\"Collided\".text = \"Collided: ?\"
+	$\"This Test\".text = \"This Test: ?\"
+"
+
+[node name="Around the Clock Test Data" type="Control"]
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Test" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 200.0
+margin_bottom = 30.0
+text = "Test: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 30.0
+margin_right = 200.0
+margin_bottom = 45.0
+text = "Player: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player Direction" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 45.0
+margin_right = 200.0
+margin_bottom = 60.0
+text = "Player Direction: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Platform Length" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 60.0
+margin_right = 200.0
+margin_bottom = 75.0
+text = "Platform Length: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Platform Rotation" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 75.0
+margin_right = 200.0
+margin_bottom = 90.0
+text = "Platform Rotation: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player Rotation" type="Label" parent="."]
+margin_left = 15.0
+margin_top = 90.0
+margin_right = 200.0
+margin_bottom = 105.0
+text = "Player Rotation: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tests Passed" type="Label" parent="."]
+margin_left = 400.0
+margin_top = 15.0
+margin_right = 600.0
+margin_bottom = 30.0
+text = "Tests passed: 0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tests Failed" type="Label" parent="."]
+margin_left = 400.0
+margin_top = 30.0
+margin_right = 600.0
+margin_bottom = 45.0
+text = "Tests failed: 0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Collided" type="Label" parent="."]
+margin_left = 400.0
+margin_top = 45.0
+margin_right = 600.0
+margin_bottom = 60.0
+text = "Collided: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="This Test" type="Label" parent="."]
+margin_left = 400.0
+margin_top = 60.0
+margin_right = 600.0
+margin_bottom = 75.0
+text = "This Test: ?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Paused" type="Label" parent="."]
+visible = false
+margin_left = 400.0
+margin_top = 75.0
+margin_right = 600.0
+margin_bottom = 90.0
+text = "Paused
+Press Space/Enter to continue"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Complete" type="Label" parent="."]
+visible = false
+margin_left = 400.0
+margin_top = 75.0
+margin_right = 600.0
+margin_bottom = 90.0
+text = "All tests complete
+Press Space/Enter to repeat"
+__meta__ = {
+"_edit_use_anchors_": false
+}
