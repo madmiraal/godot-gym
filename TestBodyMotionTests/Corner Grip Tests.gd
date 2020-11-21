@@ -25,9 +25,9 @@ var direction
 var offset_code
 var offset
 var should_collide
-var collided = false
 var paused = false
-var complete = false
+var test_complete = false
+var all_complete = false
 
 onready var platform_position = $Platform.position
 onready var platform_width = $Platform/CollisionShape2D.shape.extents.x
@@ -36,7 +36,7 @@ onready var one_way_platform = $Platform/CollisionShape2D.one_way_collision
 
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
-		if complete:
+		if all_complete:
 			restart()
 		else:
 			pause(!paused)
@@ -49,7 +49,7 @@ func _ready():
 	restart()
 
 func restart():
-	complete = false
+	all_complete = false
 	test_id = 0
 	if $"Corner Grip Test Data":
 		$"Corner Grip Test Data".restart()
@@ -217,7 +217,7 @@ func prepare_next_test():
 	start_test()
 
 func tests_complete():
-	complete = true
+	all_complete = true
 	$Timer.stop()
 	if $"Corner Grip Test Data":
 		$"Corner Grip Test Data".tests_complete()
@@ -230,20 +230,25 @@ func pause(on):
 	player.linear_velocity = Vector2()
 	if player is RigidBody2D:
 		player.angular_velocity = 0
+	if on:
+		if not test_complete:
+			test_id -= 1
 
 func end_test():
 	player.free()
 	target.free()
-	collided = false
+	test_complete = false
 
 func _on_body_collided(body):
-	collided = true
-	update_test_result(should_collide, true)
-	if not should_collide and stop_on_failure:
-		pause(true)
+	if not test_complete:
+		test_complete = true
+		update_test_result(should_collide, true)
+		if not should_collide and stop_on_failure:
+			pause(true)
 
 func _on_target_collided():
-	if not collided:
+	if not test_complete:
+		test_complete = true
 		update_test_result(!should_collide, false)
 		if should_collide and stop_on_failure:
 			pause(true)
